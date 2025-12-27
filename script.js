@@ -27,11 +27,23 @@ document.addEventListener("DOMContentLoaded",function(){
 
     }
 
+    function displayUserData(data){
+        const totalQues=data.totalQuestions;
+        const totalEasyQues=data.totalEasy;
+        const totalMediumQues=data.totalMedium;
+        const totalHardQues=data.totalHard;
+
+        const solvedTotalQues=data.totalSolved;
+        const solvedTotalEasyQues=data.easySolved;
+        const solvedTotalMediumQues=data.mediumSolved;
+        const solvedTotalHardQues=data.hardSolved;
+
+    }
 
     async function fetchUserDetails(username) {
         const url=`https://leetcode-stats-api.herokuapp.com/${username}`
         try{
-            searchButton.textContent="Searchig...";
+            searchButton.textContent="Searching...";
             searchButton.disabled=true;
 
             const response=await fetch(url);
@@ -40,14 +52,22 @@ document.addEventListener("DOMContentLoaded",function(){
             }
             const data= await response.json();
             console.log("logging data",data);
+
+            if (!data || data.status === "error") {
+            statsContainer.innerHTML = `<p>No Data Found</p>`;
+            return;
+    }
         }
         catch(error){
+            console.error(error);
             statsContainer.innerHTML=`<p>No Data Found</p>`
         }finally{
             searchButton.textContent="Search";
             searchButton.disabled=false;
 
         }
+
+        // displayUserData(data)
 
     }
 
