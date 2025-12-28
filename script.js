@@ -26,6 +26,13 @@ document.addEventListener("DOMContentLoaded",function(){
 
 
     }
+    
+    function updateProgress(solved,total,label,circle){
+        const progressDegree=(solved/total)*100;
+        circle.style.setProperty("--progress-degree",`${progressDegree}%`);
+        label.textContent=`${solved}/${total}`;
+    }
+
 
     function displayUserData(data){
         const totalQues=data.totalQuestions;
@@ -38,6 +45,22 @@ document.addEventListener("DOMContentLoaded",function(){
         const solvedTotalMediumQues=data.mediumSolved;
         const solvedTotalHardQues=data.hardSolved;
 
+        updateProgress(solvedTotalEasyQues,totalEasyQues,easyLabel,easyProgressCircle);
+        updateProgress(solvedTotalMediumQues,totalMediumQues,mediumLabel,mediumProgressCircle);
+        updateProgress(solvedTotalHardQues,totalHardQues,hardLabel,hardProgressCircle);
+
+        const acceptanceRate=data.acceptanceRate;
+        const ranking=data.ranking
+
+        cardStatsContainer.innerHTML=`<div class="card">
+        <h3>Acceptance Rate:</h3>
+        <p>${acceptanceRate}</p>
+        </div>
+        <div class="card">
+        <h3>Ranking:</h3>
+        <p>${ranking}</p>
+        </div>
+        `
     }
 
     async function fetchUserDetails(username) {
@@ -53,9 +76,13 @@ document.addEventListener("DOMContentLoaded",function(){
             const data= await response.json();
             console.log("logging data",data);
 
+            displayUserData(data);
+             
             if (!data || data.status === "error") {
             statsContainer.innerHTML = `<p>No Data Found</p>`;
             return;
+
+            
     }
         }
         catch(error){
@@ -67,7 +94,7 @@ document.addEventListener("DOMContentLoaded",function(){
 
         }
 
-        // displayUserData(data)
+        
 
     }
 
